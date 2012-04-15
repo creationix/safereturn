@@ -12,9 +12,11 @@ function safeReturn(callback, timeout) {
   } else {
     throw new TypeError("Wrong number of arguments.  Must be 1 or 2");
   }
-  
+
+  // TODO: support callback rewrapping via originalCallback property
+
   var isDone, timer;
-  
+
   // If timeout value is truthy, then start a timer
   if (timeout) {
     // Create the error early to catch the interesting call stack
@@ -25,7 +27,7 @@ function safeReturn(callback, timeout) {
       callback(timeoutErr);
     }, timeout);
   }
-  
+
   // Return the wrapped callback
   return function safeCallback() {
     if (isDone) return;
@@ -45,19 +47,19 @@ function map(callback, length) {
   if (typeof callback !== "function") throw new TypeError("Callback must be a function.");
   if (typeof length !== "number" || length < 0 || length !== length << 0)
     throw new TypeError("Length must be a non-negative integer.");
-  
+
   var result = {};
 
   // Check for the empty case.
   if (!length) callback(err, result);
-  
+
   return function generator(key) {
     // The first call checks that the key is unique and returns the item callback.
     if (result.hasOwnProperty(key)) {
       return callback(new Error("Duplicate key " + key));
     }
     result[key] = undefined;
-    
+
     // Put the result in the object and count down to 0 to finish.
     return function itemCallback() {
       result[key] = arguments;
