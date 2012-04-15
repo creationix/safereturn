@@ -13,9 +13,14 @@ function safeReturn(callback, timeout) {
     throw new TypeError("Wrong number of arguments.  Must be 1 or 2");
   }
 
-  // TODO: support callback rewrapping via originalCallback property
-
   var isDone, timer;
+
+  // Allow re-wrapping of callbacks to prevent double wrapping and to allow
+  // changing the timeout value.
+  if (callback.hasOwnProperty("originalCallback")) {
+    callback = callback.originalCallback;
+  }
+  safeCallback.originalCallback = callback;
 
   // If timeout value is truthy, then start a timer
   if (timeout) {
@@ -29,12 +34,13 @@ function safeReturn(callback, timeout) {
   }
 
   // Return the wrapped callback
-  return function safeCallback() {
+  function safeCallback() {
     if (isDone) return;
     clearTimeout(timer);
     isDone = true;
     return callback.apply(this, arguments);
-  };
+  }
+  return safeCallback;
 }
 
 // The map function is for async functions that want to do `length` parallel calls.
