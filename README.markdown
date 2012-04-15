@@ -29,8 +29,10 @@ SafeReturn wants to help.
  - Not require any special syntax, function block, or indentation.  Must only
    consume a small amount of vertical space.
  - Not appear to be blocking or sequential in any way.  Better to embrace callbacks.
- 
-## `safeReturn(callback, timeout) -> wrappedCallback`
+
+## API
+
+### `safeReturn(callback, timeout) -> wrappedCallback`
 
 This function is the main API.  It takes in your callback and returns a safe wrapped
 version of the callback.  Optional is a timeout override for this wrapping.  The global
@@ -48,7 +50,7 @@ function funkyStatFile(path, callback) {
 }
 ```
 
-## `safeReturn.map(callback, length) -> itemCallbackGenerator`
+### `safeReturn.map(callback, length) -> itemCallbackGenerator`
 
 This is for functions that want to do `length` async operations in parallel.
 It takes the callback and the number of items you expect to do in parallel.  It
