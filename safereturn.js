@@ -57,7 +57,7 @@ function map(callback, length) {
   var result = {};
 
   // Check for the empty case.
-  if (!length) callback(err, result);
+  if (!length) callback(null, result);
 
   return function generator(key) {
     // The first call checks that the key is unique and returns the item callback.
@@ -73,5 +73,6 @@ function map(callback, length) {
         callback(null, result);
       }
     };
-  }
+  };
 }
+
