@@ -1,5 +1,3 @@
-// This is the sample from the README.
-
 var fs = require('fs');
 var safeReturn = require('../safereturn');
 
