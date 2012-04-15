@@ -78,7 +78,7 @@ recommended to use in conjuction with safeReturn.
 ## Techniques
 
 Yep, that's the whole API.  The real power comes in techniques.  Remember a goal
-of SafeReturn is to not reimplement all possible control-flow patters, but to
+of SafeReturn is to not reimplement all possible control-flow patterns, but to
 enable and assist you the programmer.
 
 ### Serial Chain
