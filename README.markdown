@@ -103,7 +103,7 @@ It can also be accomplished with named functions.
 function folderInfo(path, callback) {
   callback = safeReturn(callback);
   // Note that we can wrap callbacks we give to other code as well as the ones
-  // we provide.  I trust fs.readdir to behave, but if it was some other lib
+  // we're given.  I trust fs.readdir to behave, but if it was some other lib
   // I might not trust it and want to wrap the callback.
   fs.readdir(path, safeReturn(onReaddir)); 
   
