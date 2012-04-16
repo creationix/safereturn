@@ -23,24 +23,41 @@ function safeReturn(callback, timeout) {
   safeCallback.originalCallback = callback;
 
   // If timeout value is truthy, then start a timer
+  var err = new Error("Original Stack");
   if (timeout) {
     // Create the error early to catch the interesting call stack
-    var timeoutErr = new Error("ETIMEOUT: Callback timeout exceeded");
     timer = setTimeout(function () {
-      isDone = true;
-      timeoutErr.code = "ETIMEOUT";
-      callback(timeoutErr);
+      // If the callback never get's called, that is bad.  We should warn.
+      safeReturn.onTimeout(safeCallback, err);
     }, timeout);
   }
 
   // Return the wrapped callback
   function safeCallback() {
-    if (isDone) return;
+    if (isDone) {
+      // If the callback is called multiple times, this is bad.  We should warn.
+      return safeReturn.onDuplicate.call(this, safeCallback, err);
+    }
     clearTimeout(timer);
     isDone = true;
     return callback.apply(this, arguments);
   }
   return safeCallback;
+}
+
+safeReturn.onDuplicate = onDuplicate;
+function onDuplicate(wrappedCallback, oldErr) {
+  var err = new Error("Callback called multiple times");
+  console.error(err.stack + "\n" + oldErr.stack);
+}
+
+safeReturn.onTimeout = onTimeout;
+function onTimeout(wrappedCallback, oldErr) {
+  var callback = wrappedCallback.originalCallback;
+  var err = new Error("ETIMEDOUT: Callback timeout expired");
+  err.code = "ETIMEDOUT";
+  console.error(err.stack + "\n" + oldErr.stack);
+  wrappedCallback(err);
 }
 
 // The map function is for async functions that want to do `length` parallel calls.
@@ -51,9 +68,9 @@ safeReturn.map = map;
 function map(callback, length) {
   // Args check
   if (typeof callback !== "function") throw new TypeError("Callback must be a function.");
-  if (typeof length !== "number" || length < 0 || length !== length << 0)
+  if (typeof length !== "number" || length < 0 || length !== length << 0) {
     throw new TypeError("Length must be a non-negative integer.");
-
+  }
   var result = {};
 
   // Check for the empty case.

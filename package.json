@@ -2,7 +2,7 @@
   "author": "Tim Caswell <tim@creationix.com>",
   "name": "safereturn",
   "description": "Functional helpers for callback based code.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "repository": {
     "type": "git",
     "url": "git://github.com/creationix/safereturn.git"
