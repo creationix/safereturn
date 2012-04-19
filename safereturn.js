@@ -54,10 +54,8 @@ function onDuplicate(wrappedCallback, oldErr) {
 safeReturn.onTimeout = onTimeout;
 function onTimeout(wrappedCallback, oldErr) {
   var callback = wrappedCallback.originalCallback;
-  var err = new Error("ETIMEDOUT: Callback timeout expired");
-  err.code = "ETIMEDOUT";
+  var err = new Error("Callback timeout expired");
   console.error(err.stack + "\n" + oldErr.stack);
-  wrappedCallback(err);
 }
 
 // The map function is for async functions that want to do `length` parallel calls.
